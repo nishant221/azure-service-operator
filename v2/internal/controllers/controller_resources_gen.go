@@ -1386,6 +1386,21 @@ func getKnownStorageTypes() []*registration.StorageType {
 			},
 		},
 	})
+	result = append(result, &registration.StorageType{
+		Obj: new(web_v20220301s.SitesSourcecontrolsWeb),
+		Indexes: []registration.Index{
+			{
+				Key:  ".spec.gitHubActionConfiguration.containerConfiguration.password",
+				Func: indexWebSitesSourcecontrolsWebPassword,
+			},
+		},
+		Watches: []registration.Watch{
+			{
+				Type:             &v1.Secret{},
+				MakeEventHandler: watchSecretsFactory([]string{".spec.gitHubActionConfiguration.containerConfiguration.password"}, &web_v20220301s.SitesSourcecontrolsWebList{}),
+			},
+		},
+	})
 	return result
 }
 
@@ -2315,11 +2330,13 @@ func getKnownTypes() []client.Object {
 	result = append(
 		result,
 		new(web_v20220301.ServerFarm),
-		new(web_v20220301.Site))
+		new(web_v20220301.Site),
+		new(web_v20220301.SitesSourcecontrolsWeb))
 	result = append(
 		result,
 		new(web_v20220301s.ServerFarm),
-		new(web_v20220301s.Site))
+		new(web_v20220301s.Site),
+		new(web_v20220301s.SitesSourcecontrolsWeb))
 	return result
 }
 
@@ -2717,6 +2734,7 @@ func getResourceExtensions() []genruntime.ResourceExtension {
 	result = append(result, &synapse_customizations.WorkspacesBigDataPoolExtension{})
 	result = append(result, &web_customizations.ServerFarmExtension{})
 	result = append(result, &web_customizations.SiteExtension{})
+	result = append(result, &web_customizations.SitesSourcecontrolsWebExtension{})
 	return result
 }
 
@@ -4856,4 +4874,22 @@ func indexWebSiteAccessKey(rawObj client.Object) []string {
 		result = append(result, value.AccessKey.Index()...)
 	}
 	return result
+}
+
+// indexWebSitesSourcecontrolsWebPassword an index function for web_v20220301s.SitesSourcecontrolsWeb .spec.gitHubActionConfiguration.containerConfiguration.password
+func indexWebSitesSourcecontrolsWebPassword(rawObj client.Object) []string {
+	obj, ok := rawObj.(*web_v20220301s.SitesSourcecontrolsWeb)
+	if !ok {
+		return nil
+	}
+	if obj.Spec.GitHubActionConfiguration == nil {
+		return nil
+	}
+	if obj.Spec.GitHubActionConfiguration.ContainerConfiguration == nil {
+		return nil
+	}
+	if obj.Spec.GitHubActionConfiguration.ContainerConfiguration.Password == nil {
+		return nil
+	}
+	return obj.Spec.GitHubActionConfiguration.ContainerConfiguration.Password.Index()
 }

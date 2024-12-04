@@ -1,0 +1,10 @@
+apiVersion: web.azure.com/v1api20220301
+kind: SitesSourcecontrolsWeb
+metadata:
+  name: web
+  namespace: default
+spec:
+  branch: master
+  isManualIntegration: true
+  owner:
+    armId: /subscriptions/96452422-d6ae-48b7-869d-cd061dbe58f5/resourceGroups/asotest-rg-nbkbyh/providers/Microsoft.Web/sites/aso-sample-function-awfg
